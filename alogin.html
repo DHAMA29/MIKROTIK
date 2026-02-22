@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="expires" content="-1">
+
+    <title>Internet Hotspot - Redirect</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: "Segoe UI", Roboto, Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background-color: #f4f6f8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+        }
+
+        .container {
+            background-color: #ffffff;
+            width: 100%;
+            max-width: 420px;
+            padding: 32px 28px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+
+        .brand {
+            font-size: 14px;
+            font-weight: 600;
+            color: #6c757d;
+            margin-bottom: 10px;
+            letter-spacing: 0.5px;
+        }
+
+        h1 {
+            font-size: 22px;
+            margin-bottom: 10px;
+            color: #212529;
+        }
+
+        p {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 22px;
+        }
+
+        .btn {
+            display: inline-block;
+            width: 100%;
+            padding: 12px;
+            background-color: #0d6efd;
+            color: #ffffff;
+            font-size: 15px;
+            font-weight: 600;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background-color: #0b5ed7;
+        }
+
+        .link {
+            margin-top: 14px;
+            font-size: 13px;
+        }
+
+        .link a {
+            color: #0d6efd;
+            text-decoration: none;
+        }
+
+        .link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+
+    <script>
+        function startRedirect() {
+            $(if popup == 'true')
+            open('$(link-status)', 'hotspot_status',
+            'toolbar=0,location=0,directories=0,status=0,menubars=0,resizable=1,width=290,height=200');
+            $(endif)
+            location.href = unescape('$(link-redirect-esc)');
+        }
+    </script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="brand">Welcome to Internet by Dhama</div>
+        <h1>You are logged in</h1>
+        <p>Click the button below to continue to the internet.</p>
+
+        <button class="btn" onclick="startRedirect()">
+            Continue to Internet
+        </button>
+
+        <div class="link">
+            Or click <a href="$(link-redirect)">here</a> if the button does not work
+        </div>
+    </div>
+</body>
+</html>
