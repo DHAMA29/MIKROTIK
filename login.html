@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="pragma" content="no-cache" />
+  <meta http-equiv="expires" content="-1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Internet login by dhama</title>
+
+  <style>
+    :root{
+      --bg:#ffffff;
+      --text:#0f172a;
+      --muted:#64748b;
+      --line:#e2e8f0;
+      --card:#ffffff;
+      --shadow:0 10px 30px rgba(15,23,42,.08);
+      --radius:16px;
+      --focus:0 0 0 4px rgba(59,130,246,.18);
+      --primary:#2563eb;
+      --primaryHover:#1d4ed8;
+
+      --dangerBg:#fef2f2;
+      --dangerText:#991b1b;
+      --dangerLine:#fecaca;
+
+      --softBg:#f8fafc;
+    }
+
+    *{box-sizing:border-box;}
+    html,body{height:100%;}
+    body{
+      margin:0;
+      font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji";
+      background:var(--bg);
+      color:var(--text);
+      line-height:1.4;
+    }
+
+    .ie-fixMinHeight{min-height:100%; display:flex;}
+    .main{
+      width:100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:28px 16px;
+    }
+
+    .wrap{
+      width:100%;
+      max-width:420px;
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:26px 22px 18px;
+      animation:fadeIn .45s ease both;
+    }
+
+    @keyframes fadeIn{
+      from{opacity:0; transform:translateY(8px);}
+      to{opacity:1; transform:translateY(0);}
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-direction:column;
+      gap:10px;
+      margin-bottom:14px;
+      text-align:center;
+    }
+
+    /* Logo SVG bawaan Mikrotik (dipaksa warna gelap agar cocok tema putih) */
+    .logo{width:160px; height:auto; display:block;}
+    .logo path{fill:#111827 !important;}
+
+    .title{
+      margin:0;
+      font-size:18px;
+      font-weight:800;
+      letter-spacing:.2px;
+    }
+    .subtitle{
+      margin:0;
+      font-size:13px;
+      color:var(--muted);
+    }
+
+    .info{
+      margin:14px 0 14px;
+      font-size:13px;
+      color:var(--muted);
+      background:var(--softBg);
+      border:1px solid var(--line);
+      border-radius:12px;
+      padding:10px 12px;
+    }
+    .info a{
+      color:var(--primary);
+      text-decoration:none;
+      font-weight:700;
+    }
+    .info a:hover{text-decoration:underline;}
+
+    .info.alert{
+      color:var(--dangerText);
+      background:var(--dangerBg);
+      border-color:var(--dangerLine);
+    }
+
+    form{margin:0;}
+    label{display:block; margin-bottom:10px;}
+
+    .field{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:12px 12px;
+      background:#fff;
+      transition:border-color .15s ease, box-shadow .15s ease;
+    }
+    .field:focus-within{
+      border-color:#93c5fd;
+      box-shadow:var(--focus);
+    }
+
+    .ico{
+      width:18px;
+      height:18px;
+      opacity:.85;
+      flex:0 0 auto;
+    }
+
+    input[type="text"],
+    input[type="password"]{
+      width:100%;
+      border:0;
+      outline:none;
+      font-size:14px;
+      color:var(--text);
+      background:transparent;
+    }
+    input::placeholder{color:#94a3b8;}
+
+    input[type="submit"]{
+      width:100%;
+      margin-top:6px;
+      border:0;
+      border-radius:14px;
+      padding:12px 14px;
+      font-size:14px;
+      font-weight:800;
+      cursor:pointer;
+      color:#fff;
+      background:var(--primary);
+      transition:transform .05s ease, background .15s ease;
+    }
+    input[type="submit"]:hover{background:var(--primaryHover);}
+    input[type="submit"]:active{transform:translateY(1px);}
+
+    .bt{
+      margin:14px 0 0;
+      text-align:center;
+      font-size:12px;
+      color:#94a3b8;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- =======================
+       MikroTik CHAP support
+       ======================= -->
+  $(if chap-id)
+  <form name="sendin" action="$(link-login-only)" method="post" style="display:none">
+    <input type="hidden" name="username" />
+    <input type="hidden" name="password" />
+    <input type="hidden" name="dst" value="$(link-orig)" />
+    <input type="hidden" name="popup" value="true" />
+  </form>
+
+  <script src="/md5.js"></script>
+  <script>
+    function doLogin() {
+      document.sendin.username.value = document.login.username.value;
+      document.sendin.password.value = hexMD5('$(chap-id)' + document.login.password.value + '$(chap-challenge)');
+      document.sendin.submit();
+      return false;
+    }
+  </script>
+  $(endif)
+
+  <div class="ie-fixMinHeight">
+    <div class="main">
+      <div class="wrap">
+
+        <div class="brand">
+          <!-- Logo SVG bawaan template Anda -->
+          <svg class="logo" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 174 42" aria-label="logo">
+            <path fill="#fff" d="M7.32 13.66L0 41.74 3.12 41.74 9.49 15.94 9.58 15.94 15.01 41.74 18.22 41.74 36.86 16.34 36.95 16.34 30.02 41.74 33.18 41.74 40.4 13.66 35.73 13.66 17.23 38.87 11.99 13.66 7.32 13.66zM43.43 21.45L38.19 41.74 41.16 41.74 46.4 21.45 43.43 21.45zM50.68 21.45L45.5 41.74 48.47 41.74 50.36 34.39 55.55 30.77 62.02 41.74 65.27 41.74 57.91 29.28 69.43 21.45 65.46 21.45 51.21 31.36 51.12 31.28 53.66 21.45 50.68 21.45z" />
+            <path d="M71.18 21.45L65.94 41.74h3l2.74-10.62c1-3.81 3.82-7.39 9.16-7.47.56 0 1.13 0 1.7 0l.66-2.48c-.52 0-1.09 0-1.61 0-4.34 0-6.94 2-8.82 5h-.1l1.23-4.68zM103.8 28.8c0-5-4-7.94-9.63-7.94-8.69 0-13.59 6.37-13.59 13 0 5.07 3.44 8.45 9.72 8.45 9 0 13.5-6.68 13.5-13.53m-3 .52c0 4.72-3.44 10.93-9.95 10.93-5 0-7.32-2.68-7.32-6.61 0-4.76 3.59-10.7 10.1-10.7 4.77 0 7.17 2.6 7.17 6.38M132.33 21.43L134.26 13.66 105.19 13.66 103.27 21.45 112.59 21.45 112.59 21.45 122.99 21.45 122.99 21.45 132.33 21.43zM111.67 25.17L107.55 41.74 117.93 41.74 122.06 25.17 122.06 25.16 111.67 25.16 111.67 25.17zM134 25.17l-4.11 16.57h9.35l4.1-16.57zm10.28-3.73l1.94-7.78h-9.34l-2 7.79zM150.09 13.66L143.11 41.74 152.45 41.74 153.91 35.92 156.04 34.34 159.34 41.74 169.49 41.74 163.26 29.55 174.26 21.33 163.07 21.33 156.18 27.3 156.09 27.3 159.44 13.66 150.09 13.66zM47.45 0c1.14 7.93 5.39 12.74 14.07 13.14A10.69 10.69 0 0 1 47.45 0" fill="#fff" fill-rule="evenodd" />
+            <path d="M42.91,1.4c.1,0,.11,0,.12.11A16.55,16.55,0,0,0,48.26,13a16.6,16.6,0,0,0,12,4.66c-10,4-20.55-5.6-17.33-16.28" fill="#fff" fill-rule="evenodd" />
+          </svg>
+
+          <h1 class="title">Internet login by dhama</h1>
+          <p class="subtitle">Please sign in to access the hotspot.</p>
+        </div>
+
+        <form name="login" action="$(link-login-only)" method="post" $(if chap-id) onSubmit="return doLogin()" $(endif)>
+          <input type="hidden" name="dst" value="$(link-orig)" />
+          <input type="hidden" name="popup" value="true" />
+
+          <p class="info $(if error)alert$(endif)">
+            $(if error == "")
+              Please log in to use the internet hotspot service
+              $(if trial == 'yes')
+                <br />Free trial available,
+                <a href="$(link-login-only)?dst=$(link-orig-esc)&amp;username=T-$(mac-esc)">click here</a>.
+              $(endif)
+            $(endif)
+
+            $(if error)
+              $(error)
+            $(endif)
+          </p>
+
+          <label>
+            <div class="field">
+              <!-- Icon user (inline SVG, jadi tidak butuh img/user.svg) -->
+              <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
+                <path fill="currentColor" d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Zm0 2c-4.42 0-8 2-8 4.5A1.5 1.5 0 0 0 5.5 20h13A1.5 1.5 0 0 0 20 18.5C20 16 16.42 14 12 14Z"/>
+              </svg>
+              <input name="username" type="text" value="$(username)" placeholder="Username" autocomplete="username" />
+            </div>
+          </label>
+
+          <label>
+            <div class="field">
+              <!-- Icon password/lock (inline SVG, jadi tidak butuh img/password.svg) -->
+              <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
+                <path fill="currentColor" d="M17 9h-1V7a4 4 0 0 0-8 0v2H7a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2Zm-7-2a2 2 0 0 1 4 0v2h-4Zm3 10.73V19h-2v-1.27a2 2 0 1 1 2 0Z"/>
+              </svg>
+              <input name="password" type="password" placeholder="Password" autocomplete="current-password" />
+            </div>
+          </label>
+
+          <input type="submit" value="Connect" />
+        </form>
+
+        <p class="bt">Powered by MikroTik RouterOS</p>
+
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
